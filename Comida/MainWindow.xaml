@@ -1,0 +1,191 @@
+﻿<Window x:Class="Comida.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Comida"
+        mc:Ignorable="d"
+        Icon="assets/fruit_food_apple.ico"
+        Title="Comida"
+        Height="700"
+        Width="950"
+        Background="LightSkyBlue">
+    <Window.Resources>
+        <!-- Objetos -->
+        <local:VisibilityConverter x:Key="visibilityConverter" />
+
+        <!-- Estilos -->
+
+        <!-- Image -->
+        <Style TargetType="Image"
+               x:Key="Icono">
+            <Setter Property="Height"
+                    Value="30" />
+        </Style>
+
+        <!-- CheckBox-->
+        <Style TargetType="CheckBox">
+            <Setter Property="Margin"
+                    Value="5" />
+        </Style>
+
+        <!-- TextBlock-->
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin"
+                    Value="10,15,10,0" />
+        </Style>
+
+        <!-- TextBox-->
+        <Style TargetType="TextBox">
+            <Setter Property="Margin"
+                    Value="10,0,10,0" />
+            <Setter Property="TextWrapping"
+                    Value="Wrap" />
+        </Style>
+
+        <!-- Triggers -->
+        <Style TargetType="Image"
+               x:Key="BanderaIcono"
+               BasedOn="{StaticResource Icono}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Tipo}"
+                             Value="China">
+                    <Setter Property="Source"
+                            Value="assets/china.png" />
+                    <Setter Property="ToolTip"
+                            Value="Comida china" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Tipo}"
+                             Value="Americana">
+                    <Setter Property="Source"
+                            Value="assets/united_states.png" />
+                    <Setter Property="ToolTip"
+                            Value="Comida americana" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Tipo}"
+                             Value="Mexicana">
+                    <Setter Property="Source"
+                            Value="assets/mexico.png" />
+                    <Setter Property="ToolTip"
+                            Value="Comida mexicana" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="TextBlock"
+               x:Key="Titulo">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Tipo}"
+                             Value="China">
+                    <Setter Property="FontFamily"
+                            Value="Chinese Wok Food St" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Tipo}"
+                             Value="Americana">
+                    <Setter Property="FontFamily"
+                            Value="Slim Summer" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Tipo}"
+                             Value="Mexicana">
+                    <Setter Property="FontFamily"
+                            Value="Taco Salad" />
+                </DataTrigger>
+            </Style.Triggers>
+            <Setter Property="Text"
+                    Value="{Binding Nombre}" />
+            <Setter Property="HorizontalAlignment"
+                    Value="Center" />
+        </Style>
+
+        <!-- Plantillas-->
+        <DataTemplate x:Key="comida">
+            <Border Width="240"
+                    Height="275"
+                    Margin="10"
+                    BorderBrush="Black"
+                    BorderThickness="1"
+                    Background="AliceBlue">
+                <Border.Effect>
+                    <DropShadowEffect />
+                </Border.Effect>
+                <DockPanel Margin="5">
+                    <Viewbox DockPanel.Dock="Top"
+                             MaxHeight="50">
+                        <TextBlock Style="{StaticResource Titulo}" />
+                    </Viewbox>
+                    <DockPanel DockPanel.Dock="Bottom"
+                               LastChildFill="False"
+                               Margin="10,0">
+                        <Image Style="{StaticResource BanderaIcono}" />
+                        <StackPanel DockPanel.Dock="Right"
+                                    Orientation="Horizontal">
+                            <Image Style="{StaticResource Icono}"
+                                   Source="assets/gluten.png"
+                                   Visibility="{Binding Gluten, Converter={StaticResource visibilityConverter}}" />
+                            <Image Style="{StaticResource Icono}"
+                                   Source="assets/milk.png"
+                                   Visibility="{Binding Leche, Converter={StaticResource visibilityConverter}}" />
+                            <Image Style="{StaticResource Icono}"
+                                   Source="assets/sulfide.png"
+                                   Visibility="{Binding Sulfitos, Converter={StaticResource visibilityConverter}}" />
+                            <Image Style="{StaticResource Icono}"
+                                   Source="assets/soybean.png"
+                                   Visibility="{Binding Soja, Converter={StaticResource visibilityConverter}}" />
+                        </StackPanel>
+                    </DockPanel>
+                    <Image Source="{Binding Imagen}"
+                           Stretch="Fill"
+                           Margin="10" />
+                </DockPanel>
+            </Border>
+        </DataTemplate>
+
+    </Window.Resources>
+    <Border  Margin="10"
+             Background="White"
+             BorderBrush="Black"
+             BorderThickness="1">
+        <DockPanel>
+            <StackPanel DockPanel.Dock="Right"
+                        Width="275"
+                        Background="Gainsboro"
+                        Margin="5,10,15,10"
+                        DataContext="{Binding ElementName=PlatoListBox, Path=SelectedItem}">
+                <TextBlock Text="Nombre del plato" />
+                <TextBox Text="{Binding Path=Nombre}" />
+                <TextBlock Text="Foto del plato" />
+                <TextBox Text="{Binding Path=Imagen}" />
+                <TextBlock Text="Tipo de comida" />
+                <ComboBox x:Name="TipoComboBox"
+                          SelectedItem="{Binding Path=Tipo}"
+                          Margin="10,0,10,15" />
+                <GroupBox Header="Alérgenos"
+                          BorderBrush="Black"
+                          Margin="10,0,10,0">
+                    <UniformGrid Rows="2"
+                                 Columns="2">
+                        <CheckBox Content="Leche"
+                                  IsChecked="{Binding Path=Leche}"/>
+                        <CheckBox Content="Soja"
+                                  IsChecked="{Binding Path=Soja}"/>
+                        <CheckBox Content="Gluten"
+                                  IsChecked="{Binding Path=Gluten}"/>
+                        <CheckBox Content="Sulfitos"
+                                  IsChecked="{Binding Path=Sulfitos}" />
+                    </UniformGrid>
+                </GroupBox>
+            </StackPanel>
+            <ListBox x:Name="PlatoListBox"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     ItemTemplate="{StaticResource comida}"
+                     Margin="10">
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+            </ListBox>
+        </DockPanel>
+    </Border>
+
+</Window>
